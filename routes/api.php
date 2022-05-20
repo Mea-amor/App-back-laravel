@@ -4,7 +4,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\API\RegisterController;
-use App\Http\Controllers\API\ProductController;
+use App\Http\Controllers\API\EtudiantController;
+use App\Http\Controllers\API\MatiereController;
+use App\Http\Controllers\API\ProfesseurController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -25,5 +28,12 @@ Route::post('register', [RegisterController::class, 'register']);
 Route::post('login', [RegisterController::class, 'login']);
 
 Route::middleware('auth:api')->group( function () {
-    Route::resource('products', ProductController::class);
+    Route::resource('etudiant', EtudiantController::class);
 });
+Route::middleware('auth:api')->group( function () {
+    Route::resource('matiere', MatiereController::class);
+});
+Route::middleware('auth:api')->group( function () {
+    Route::resource('professeur', ProfesseurController::class);
+});
+
