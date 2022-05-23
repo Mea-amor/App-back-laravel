@@ -17,9 +17,9 @@ class ProfesseurController extends BaseController
      */
     public function index()
     {
-        $professeur = Professeur::all();
+        $professeur = Professeur::with('matieres')->get();
 
-        return $this->sendResponse(ProfesseurResource::collection($professeur), 'Professeur retrieved successfully.');
+        return $this->sendResponse($professeur, 'Professeur retrieved successfully.');
     }
     /**
      * Store a newly created resource in storage.

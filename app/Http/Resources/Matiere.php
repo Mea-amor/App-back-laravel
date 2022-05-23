@@ -14,11 +14,14 @@ class Matiere extends JsonResource
      */
     public function toArray($request)
     {
+            $professeur=$this->whenLoaded('professeur');
            return [
             'id' => $this->id,
             'numero' => $this->numero,
             'libelle' => $this->libelle,
-            'coefficient' => $this->coefficient
+            'coefficient' => $this->coefficient,
+            'professeur'=>new Professeur($professeur)
+
         ];
 
         // return parent::toArray($request);

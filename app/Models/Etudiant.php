@@ -9,6 +9,13 @@ class Etudiant extends Model
 {
     use HasFactory;
 
+     /**
+     * The students that belong to the matiere.
+     */
+    public function matieres()
+    {
+        return $this->belongsToMany(Matiere::class);
+    }
 
     /**
      * The attributes that are mass assignable.

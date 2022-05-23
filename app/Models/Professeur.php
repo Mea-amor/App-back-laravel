@@ -9,6 +9,10 @@ class Professeur extends Model
 {
     use HasFactory;
 
+    public function matieres() {
+        return $this->hasMany(Matiere::class);
+    }
+
         /**
      * The attributes that are mass assignable.
      *

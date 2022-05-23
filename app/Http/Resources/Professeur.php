@@ -15,12 +15,14 @@ class Professeur extends JsonResource
     public function toArray($request)
     {
         // return parent::toArray($request);
+          $matieres=$this->whenLoaded('matieres');
         return [
             'id' => $this->id,
             'numero' => $this->numero,
             'name' => $this->name,
-            'categorie' => $this->categorie
-            // 'updated_at' => $this->updated_at->format('d/m/Y'),
+            'categorie' => $this->categorie,
+            'matieres'=>Matiere::collection($matieres)
+
         ];
     }
 }

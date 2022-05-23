@@ -12,15 +12,18 @@ class EtudiantController extends BaseController
 {
     /**
      * Display a listing of the resource.
+     * @param  \Illuminate\Http\Request  $request
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $etudiant = Etudiant::all();
+        $etudiantM = Etudiant::with('matieres');
+        $input = intVal($request->all()["per_page"]);
 
-        return $this->sendResponse(EtudiantResource::collection($etudiant), 'Etudiant retrieved successfully.');
-    }
+        $etudiant = $etudiantM->paginate($input);
+        return $this->sendResponse($etudiant, 'Etudiant retrieved successfully.');
+}
     /**
      * Store a newly created resource in storage.
      *
