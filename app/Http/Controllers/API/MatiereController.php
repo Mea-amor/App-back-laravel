@@ -17,9 +17,8 @@ class MatiereController extends BaseController
      */
     public function index()
     {
-        $matiere = Matiere::all();
-
-        return $this->sendResponse(MatiereResource::collection($matiere), 'Matiere retrieved successfully.');
+        $matiere = Matiere::with('professeur')->get();
+        return $this->sendResponse($matiere, 'matiere retrieved successfully.');
     }
     /**
      * Store a newly created resource in storage.

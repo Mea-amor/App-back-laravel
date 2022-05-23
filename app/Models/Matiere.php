@@ -9,6 +9,17 @@ class Matiere extends Model
 {
     use HasFactory;
 
+     public function professeur() {
+        return $this->belongsTo(Professeur::class,"professeur_id");
+    }
+
+     /**
+     * The matiere that belong to the etudiants.
+     */
+    public function etudiants()
+    {
+        return $this->belongsToMany(Etudiant::class);
+    }
     /**
      * The attributes that are mass assignable.
      *

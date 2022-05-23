@@ -8,6 +8,8 @@ use App\Http\Controllers\API\EtudiantController;
 use App\Http\Controllers\API\MatiereController;
 use App\Http\Controllers\API\ProfesseurController;
 
+use App\Models\Professeur;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -37,3 +39,10 @@ Route::middleware('auth:api')->group( function () {
     Route::resource('professeur', ProfesseurController::class);
 });
 
+// Route::get('professeur/{id}', function (Request $request) {
+//  $comments =   Professeur::find(1)->matieres;
+// // var_dump();
+// return $comments ;
+// });
+
+// Post::find(1)->comments;

@@ -17,10 +17,9 @@ class EtudiantController extends BaseController
      */
     public function index()
     {
-        $etudiant = Etudiant::all();
-
-        return $this->sendResponse(EtudiantResource::collection($etudiant), 'Etudiant retrieved successfully.');
-    }
+        $etudiant = Etudiant::with('matieres')->get();
+        return $this->sendResponse($etudiant, 'Etudiant retrieved successfully.');
+}
     /**
      * Store a newly created resource in storage.
      *
