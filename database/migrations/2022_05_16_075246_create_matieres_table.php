@@ -20,7 +20,8 @@ return new class extends Migration
             $table->string('coefficient');
             $table->timestamps();
 
-            $table->unsignedBigInteger('professeur_id');
+            $table->unsignedBigInteger('professeur_id')->nullable();
+            ;
             $table->foreign('professeur_id')
                 ->references('id')
                 ->on('professeurs')
