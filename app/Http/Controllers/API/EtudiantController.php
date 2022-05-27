@@ -12,16 +12,22 @@ class EtudiantController extends BaseController
 {
     /**
      * Display a listing of the resource.
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request
      *
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
     {
-        $etudiantM = Etudiant::with('matieres');
-        $input = intVal($request->all()["per_page"]);
+        $type = $request->input('type');
+        $value = $request->input('value');
+        $per_page = intVal($request->input('per_page'));
 
-        $etudiant = $etudiantM->paginate($input);
+         $etudiantMatiiere = Etudiant::with('matieres');
+        if ($type && $value ) {
+             $etudiantMatiiere->where($type, $value);
+        }
+
+        $etudiant = $etudiantMatiiere->paginate($per_page);
         return $this->sendResponse($etudiant, 'Etudiant retrieved successfully.');
 }
     /**
@@ -92,21 +98,6 @@ class EtudiantController extends BaseController
         $etudiant->save();
 
         return $this->sendResponse(new EtudiantResource($etudiant), 'Etudiant updated successfully.');
-    }
-
-    /**
-     * Filter manualy by type and value
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function getFilterEtudiant(Request $req){
-         $type = $req->input('type');
-         $value = $req->input('value');
-         $page = $req->input('page');
-         $per_page = $req->input('per_page');
-
-         $etudiant = Etudiant::where($type, $value)->paginate($per_page);
-        return $this->sendResponse($etudiant    , 'Filter request');
     }
 
     /**
