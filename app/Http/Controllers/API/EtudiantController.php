@@ -95,6 +95,21 @@ class EtudiantController extends BaseController
     }
 
     /**
+     * Filter manualy by type and value
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function getFilterEtudiant(Request $req){
+         $type = $req->input('type');
+         $value = $req->input('value');
+         $page = $req->input('page');
+         $per_page = $req->input('per_page');
+
+         $etudiant = Etudiant::where($type, $value)->paginate($per_page);
+        return $this->sendResponse($etudiant    , 'Filter request');
+    }
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id

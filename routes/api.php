@@ -30,6 +30,7 @@ Route::post('register', [RegisterController::class, 'register']);
 Route::post('login', [RegisterController::class, 'login']);
 
 Route::middleware('auth:api')->group( function () {
+    Route::get('etudiant/filter-by-type', [EtudiantController::class, 'getFilterEtudiant'] );
     Route::resource('etudiant', EtudiantController::class);
 });
 Route::middleware('auth:api')->group( function () {
