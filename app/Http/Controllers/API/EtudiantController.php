@@ -19,7 +19,7 @@ class EtudiantController extends BaseController
     public function index(Request $request)
     {
         $filterType = $request->input('type');
-        $Filtervalue = $request->input('value');
+        $filtervalue = $request->input('value');
 
         $sortbyType = $request->input('sortbyType');
         $sortbyValue = $request->input('sortbyValue');
@@ -28,8 +28,8 @@ class EtudiantController extends BaseController
 
         $etudiantMatiiere = Etudiant::with('matieres');
 
-        if ($filterType && $Filtervalue) {
-            $etudiantMatiiere->where($filterType, $Filtervalue);
+        if ($filterType && $filtervalue) {
+            $etudiantMatiiere->where($filterType, 'LIKE', '%' . $filtervalue . '%');
         } else if ($sortbyType && $sortbyValue) {
             $etudiantMatiiere->orderBy($sortbyType, $sortbyValue);
         }
