@@ -12,12 +12,29 @@ class MatiereController extends BaseController
 {
     /**
      * Display a listing of the resource.
-     *
+     * @param  \Illuminate\Http\Request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $matiere = Matiere::with('professeur')->get();
+        $filterType = $request->input('type');
+        $filtervalue = $request->input('value');
+
+        $sortbyType = $request->input('sortbyType');
+        $sortbyValue = $request->input('sortbyValue');
+
+        $per_page = intVal($request->input('per_page'));
+
+        $matiereProf = Matiere::with('professeur');
+
+        if ($filterType && $filtervalue) {
+            $matiereProf->where($filterType, 'LIKE', '%' . $filtervalue . '%');
+        } else if ($sortbyType && $sortbyValue) {
+            $matiereProf->orderBy($sortbyType, $sortbyValue);
+        }
+
+        $matiere = $matiereProf->paginate($per_page);
+
         return $this->sendResponse($matiere, 'matiere retrieved successfully.');
     }
     /**
@@ -35,7 +52,7 @@ class MatiereController extends BaseController
             'numero' => 'required'
         ]);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             return $this->sendError('Validation Error.', $validator->errors());
         }
 
@@ -77,7 +94,7 @@ class MatiereController extends BaseController
             'numero' => 'required'
         ]);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             return $this->sendError('Validation Error.', $validator->errors());
         }
 
