@@ -18,18 +18,25 @@ class EtudiantController extends BaseController
      */
     public function index(Request $request)
     {
-        $type = $request->input('type');
-        $value = $request->input('value');
+        $filterType = $request->input('type');
+        $filtervalue = $request->input('value');
+
+        $sortbyType = $request->input('sortbyType');
+        $sortbyValue = $request->input('sortbyValue');
+
         $per_page = intVal($request->input('per_page'));
 
-         $etudiantMatiiere = Etudiant::with('matieres');
-        if ($type && $value ) {
-             $etudiantMatiiere->where($type, $value);
+        $etudiantMatiiere = Etudiant::with('matieres');
+
+        if ($filterType && $filtervalue) {
+            $etudiantMatiiere->where($filterType, 'LIKE', '%' . $filtervalue . '%');
+        } else if ($sortbyType && $sortbyValue) {
+            $etudiantMatiiere->orderBy($sortbyType, $sortbyValue);
         }
 
         $etudiant = $etudiantMatiiere->paginate($per_page);
         return $this->sendResponse($etudiant, 'Etudiant retrieved successfully.');
-}
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -46,7 +53,7 @@ class EtudiantController extends BaseController
             'numero' => 'required'
         ]);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             return $this->sendError('Validation Error.', $validator->errors());
         }
 
@@ -88,7 +95,7 @@ class EtudiantController extends BaseController
             'numero' => 'required'
         ]);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             return $this->sendError('Validation Error.', $validator->errors());
         }
 
