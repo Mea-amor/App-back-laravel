@@ -71,12 +71,13 @@ class MatiereController extends BaseController
     public function show($id)
     {
         $matiere = Matiere::find($id);
+        $matiereEtudiant = Matiere::find($id)->etudiants;
 
         if (is_null($matiere)) {
             return $this->sendError('Matiere not found.');
         }
 
-        return $this->sendResponse(new MatiereResource($matiere), 'Matiere retrieved successfully.');
+        return $this->sendResponse([$matiere, $matiereEtudiant], 'Matiere retrieved successfully.');
     }
 
     /**
