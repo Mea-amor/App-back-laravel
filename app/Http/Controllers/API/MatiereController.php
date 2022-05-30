@@ -7,6 +7,7 @@ use App\Http\Controllers\API\BaseController as BaseController;
 use App\Models\Matiere;
 use Validator;
 use App\Http\Resources\Matiere as MatiereResource;
+use App\Models\Etudiant;
 
 class MatiereController extends BaseController
 {
@@ -98,7 +99,10 @@ class MatiereController extends BaseController
             return $this->sendError('Validation Error.', $validator->errors());
         }
         $profId = $request->input('professeur_id');
+        $etudiantId = $request->input('etudiant_id');
+        $isAddrelation = $request->input('remove');
 
+        var_dump($isAddrelation);
         if ($profId) {
             $matiere->professeur_id = $profId;
         } else {
@@ -107,6 +111,14 @@ class MatiereController extends BaseController
         $matiere->libelle = $input['libelle'];
         $matiere->numero = $input['numero'];
         $matiere->coefficient = $input['coefficient'];
+
+        if ($etudiantId and $isAddrelation) {
+            $etudiant = Etudiant::find($etudiantId);
+            $matiere->etudiants()->sync($etudiant, false);
+        } else {
+            $etudiant = Etudiant::find($etudiantId);
+            $matiere->etudiants()->detach($etudiant);
+        }
         $matiere->save();
 
         return $this->sendResponse(new MatiereResource($matiere), 'Matiere updated successfully.');

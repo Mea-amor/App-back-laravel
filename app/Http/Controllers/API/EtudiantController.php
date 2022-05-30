@@ -71,12 +71,13 @@ class EtudiantController extends BaseController
     public function show($id)
     {
         $etudiant = Etudiant::find($id);
+        $matieres = Etudiant::find($id)->matieres;
 
         if (is_null($etudiant)) {
             return $this->sendError('Etudiant not found.');
         }
 
-        return $this->sendResponse(new EtudiantResource($etudiant), 'Etudiant retrieved successfully.');
+        return $this->sendResponse([$etudiant, $matieres], 'Etudiant retrieved successfully.');
     }
 
     /**
