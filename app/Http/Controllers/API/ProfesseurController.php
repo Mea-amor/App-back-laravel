@@ -70,12 +70,13 @@ class ProfesseurController extends BaseController
     public function show($id)
     {
         $professeur = Professeur::find($id);
+        $matieres = Professeur::find($id)->matieres;
 
         if (is_null($professeur)) {
             return $this->sendError('Professeur not found.');
         }
 
-        return $this->sendResponse(new ProfesseurResource($professeur), 'Professeur retrieved successfully.');
+        return $this->sendResponse([$professeur, $matieres], 'Professeur retrieved successfully.');
     }
 
     /**

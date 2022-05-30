@@ -97,7 +97,13 @@ class MatiereController extends BaseController
         if ($validator->fails()) {
             return $this->sendError('Validation Error.', $validator->errors());
         }
+        $profId = $request->input('professeur_id');
 
+        if ($profId) {
+            $matiere->professeur_id = $profId;
+        } else {
+            $matiere->professeur_id = null;
+        }
         $matiere->libelle = $input['libelle'];
         $matiere->numero = $input['numero'];
         $matiere->coefficient = $input['coefficient'];
