@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * @package Gestion scolaire
+ * @subpackage Matiere
+ * @author Mamy
+ */
 namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
@@ -103,7 +107,7 @@ class MatiereController extends BaseController
         $etudiantId = $request->input('etudiant_id');
         $isAddrelation = $request->input('remove');
 
-        var_dump($isAddrelation);
+        // var_dump($isAddrelation);
         if ($profId) {
             $matiere->professeur_id = $profId;
         } else {
