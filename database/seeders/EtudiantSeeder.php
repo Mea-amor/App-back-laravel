@@ -1,6 +1,7 @@
 <?php
 
 namespace Database\Seeders;
+
 use App\Models\Etudiant;
 
 
@@ -16,27 +17,26 @@ class EtudiantSeeder extends Seeder
      */
     public function run()
     {
-        //'img', 'numero','name','sexe'
-         Etudiant::create([
+        Etudiant::create([
             'img' => 'img1',
             'numero' => '0001E',
             'name' => 'Nantenaina',
             'sexe' => 'masculin',
         ]);
-          Etudiant::create([
+        Etudiant::create([
             'img' => 'img2',
             'numero' => '0002E',
             'name' => 'Gerard',
             'sexe' => 'masculin',
-          ]);
-            Etudiant::create([
+        ]);
+        Etudiant::create([
             'img' => 'img3',
             'numero' => '0003E',
             'name' => 'Felana',
             'sexe' => 'feminin',
-            ]);
-              Etudiant::create([
-               'img' => 'img4',
+        ]);
+        Etudiant::create([
+            'img' => 'img4',
             'numero' => '0004E',
             'name' => 'Lidia',
             'sexe' => 'feminin',

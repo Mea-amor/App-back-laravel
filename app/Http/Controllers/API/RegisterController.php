@@ -23,7 +23,7 @@ class RegisterController extends BaseController
             'c_password' => 'required|same:password',
         ]);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             return $this->sendError('Validation Error.', $validator->errors());
         }
 
@@ -46,16 +46,15 @@ class RegisterController extends BaseController
     public function login(Request $request)
     {
         // var_dump("tests")
-        if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $user = Auth::user();
-            $success['token'] =  $user->createToken('MyApp')-> accessToken;
+            $success['token'] =  $user->createToken('MyApp')->accessToken;
             $success['name'] =  $user->name;
             $success['email'] =  $user->email;
 
             return $this->sendResponse($success, 'User login successfully.');
-        }
-        else{
-            return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
+        } else {
+            return $this->sendError('Unauthorised.', ['error' => 'Unauthorised']);
         }
     }
 }
