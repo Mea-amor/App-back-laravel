@@ -7,17 +7,35 @@ use App\Http\Controllers\API\BaseController as BaseController;
 use App\Models\Matiere;
 use Validator;
 use App\Http\Resources\Matiere as MatiereResource;
+use App\Models\Etudiant;
 
 class MatiereController extends BaseController
 {
     /**
      * Display a listing of the resource.
-     *
+     * @param  \Illuminate\Http\Request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $matiere = Matiere::with('professeur')->get();
+        $filterType = $request->input('type');
+        $filtervalue = $request->input('value');
+
+        $sortbyType = $request->input('sortbyType');
+        $sortbyValue = $request->input('sortbyValue');
+
+        $per_page = intVal($request->input('per_page'));
+
+        $matiereProf = Matiere::with('professeur');
+
+        if ($filterType && $filtervalue) {
+            $matiereProf->where($filterType, 'LIKE', '%' . $filtervalue . '%');
+        } else if ($sortbyType && $sortbyValue) {
+            $matiereProf->orderBy($sortbyType, $sortbyValue);
+        }
+
+        $matiere = $matiereProf->paginate($per_page);
+
         return $this->sendResponse($matiere, 'matiere retrieved successfully.');
     }
     /**
@@ -35,7 +53,7 @@ class MatiereController extends BaseController
             'numero' => 'required'
         ]);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             return $this->sendError('Validation Error.', $validator->errors());
         }
 
@@ -53,12 +71,13 @@ class MatiereController extends BaseController
     public function show($id)
     {
         $matiere = Matiere::find($id);
+        $matiereEtudiant = Matiere::find($id)->etudiants;
 
         if (is_null($matiere)) {
             return $this->sendError('Matiere not found.');
         }
 
-        return $this->sendResponse(new MatiereResource($matiere), 'Matiere retrieved successfully.');
+        return $this->sendResponse([$matiere, $matiereEtudiant], 'Matiere retrieved successfully.');
     }
 
     /**
@@ -77,13 +96,30 @@ class MatiereController extends BaseController
             'numero' => 'required'
         ]);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             return $this->sendError('Validation Error.', $validator->errors());
         }
+        $profId = $request->input('professeur_id');
+        $etudiantId = $request->input('etudiant_id');
+        $isAddrelation = $request->input('remove');
 
+        var_dump($isAddrelation);
+        if ($profId) {
+            $matiere->professeur_id = $profId;
+        } else {
+            $matiere->professeur_id = null;
+        }
         $matiere->libelle = $input['libelle'];
         $matiere->numero = $input['numero'];
         $matiere->coefficient = $input['coefficient'];
+
+        if ($etudiantId and $isAddrelation) {
+            $etudiant = Etudiant::find($etudiantId);
+            $matiere->etudiants()->sync($etudiant, false);
+        } else {
+            $etudiant = Etudiant::find($etudiantId);
+            $matiere->etudiants()->detach($etudiant);
+        }
         $matiere->save();
 
         return $this->sendResponse(new MatiereResource($matiere), 'Matiere updated successfully.');

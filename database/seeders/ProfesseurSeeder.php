@@ -1,6 +1,7 @@
 <?php
 
 namespace Database\Seeders;
+
 use App\Models\Professeur;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -15,22 +16,22 @@ class ProfesseurSeeder extends Seeder
      */
     public function run()
     {
-         Professeur::create([
+        Professeur::create([
             'numero' => '0001P',
             'name' => 'Paul',
             'categorie' => 'A',
-        ] );
-         Professeur::create([
+        ]);
+        Professeur::create([
             'numero' => '0002P',
             'name' => 'Piere',
             'categorie' => 'B',
-         ]);
-           Professeur::create([
+        ]);
+        Professeur::create([
             'numero' => '0001P',
             'name' => 'Serge',
             'categorie' => 'A',
         ]);
-          Professeur::create([
+        Professeur::create([
             'numero' => '0001P',
             'name' => 'Tina',
             'categorie' => 'B',

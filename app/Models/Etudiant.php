@@ -9,7 +9,7 @@ class Etudiant extends Model
 {
     use HasFactory;
 
-     /**
+    /**
      * The students that belong to the matiere.
      */
     public function matieres()
@@ -23,6 +23,6 @@ class Etudiant extends Model
      * @var array
      */
     protected $fillable = [
-        'img', 'numero','name','sexe'
+        'img', 'numero', 'name', 'sexe'
     ];
 }
