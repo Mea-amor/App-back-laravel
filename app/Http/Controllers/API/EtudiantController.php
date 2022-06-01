@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * @package Gestion scolaire
+ * @subpackage Etudiant
+ * @author Mamy
+ */
 namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
@@ -8,116 +12,123 @@ use App\Models\Etudiant;
 use Validator;
 use App\Http\Resources\Etudiant as EtudiantResource;
 
+/**
+ * Cette classe permet de faire les differentes type de requete entre la base de données et le front
+ * @package Gestion scolaire
+ * @subpackage EtudiantController
+ */
 class EtudiantController extends BaseController
 {
     /**
-     * Display a listing of the resource.
+     * Permet de récupérer les listes des etudiants qui sont limiter par le nombre de pagination
      * @param  \Illuminate\Http\Request
-     *
-     * @return \Illuminate\Http\Response
+     ** @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $_srequest)
     {
-        $filterType = $request->input('type');
-        $filtervalue = $request->input('value');
+        /*  variables qui stockent le type de filtre à faire */
+        $sfilterType = $_srequest->input('type');
+        $sfiltervalue = $_srequest->input('value');
 
-        $sortbyType = $request->input('sortbyType');
-        $sortbyValue = $request->input('sortbyValue');
+        /*  variable qui stock le type de  sorte à faire soit par asc soit par desc */
+        $ssortbyType = $_srequest->input('sortbyType');
+        $ssortbyValue = $_srequest->input('sortbyValue');
 
-        $per_page = intVal($request->input('per_page'));
+        $iper_page = intVal($_srequest->input('per_page'));
 
-        $etudiantMatiiere = Etudiant::with('matieres');
+        $toetudiantMatiiere = Etudiant::with('matieres');
 
-        if ($filterType && $filtervalue) {
-            $etudiantMatiiere->where($filterType, 'LIKE', '%' . $filtervalue . '%');
-        } else if ($sortbyType && $sortbyValue) {
-            $etudiantMatiiere->orderBy($sortbyType, $sortbyValue);
+        if ($sfilterType && $sfiltervalue)
+        {
+            $toetudiantMatiiere->where($sfilterType, 'LIKE', '%' . $sfiltervalue . '%');
+        } else if ($ssortbyType && $ssortbyValue) {
+            $toetudiantMatiiere->orderBy($ssortbyType, $ssortbyValue);
         }
 
-        $etudiant = $etudiantMatiiere->paginate($per_page);
-        return $this->sendResponse($etudiant, 'Etudiant retrieved successfully.');
+        $toetudiant = $toetudiantMatiiere->paginate($iper_page);
+        return $this->sendResponse($toetudiant, 'Etudiant retrieved successfully.');
     }
     /**
-     * Store a newly created resource in storage.
+     * Enregistrement d'un etudiant dans la base de données
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  \Illuminate\Http\Request  $_srequest requete venant du côté front
+     * @return \Illuminate\Http\Response retourne l'etudiant qui vient d'être enregistrer
      */
-    public function store(Request $request)
+    public function store(Request $_srequest)
     {
 
-        $input = $request->all();
+        $tsinput = $_srequest->all();
 
-        $validator = Validator::make($input, [
+        $ovalidator = Validator::make($tsinput, [
             'name' => 'required',
             'numero' => 'required'
         ]);
 
-        if ($validator->fails()) {
-            return $this->sendError('Validation Error.', $validator->errors());
+        if ($ovalidator->fails())
+        {
+            return $this->sendError('Validation Error.', $ovalidator->errors());
         }
 
-        $etudiant = Etudiant::create($input);
-
-        return $this->sendResponse(new EtudiantResource($etudiant), 'Etudiant created successfully.');
+        $oetudiant = Etudiant::create($tsinput);
+        return $this->sendResponse(new EtudiantResource($oetudiant), 'Etudiant created successfully.');
     }
 
     /**
-     * Display the specified resource.
+     * Permet de prendre un etudiant specifique
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  int  $iid parametre qui permet d'identifier un etudiant à récupérer
+     * @return \Illuminate\Http\Response retourne un etudiant avec ses matieres
      */
-    public function show($id)
+    public function show($iid)
     {
-        $etudiant = Etudiant::find($id);
-        $matieres = Etudiant::find($id)->matieres;
+        $oetudiant = Etudiant::find($iid);
+        $tomatieres = Etudiant::find($iid)->matieres;
 
-        if (is_null($etudiant)) {
+        if (is_null($oetudiant)) {
             return $this->sendError('Etudiant not found.');
         }
 
-        return $this->sendResponse([$etudiant, $matieres], 'Etudiant retrieved successfully.');
+        return $this->sendResponse([$oetudiant, $tomatieres], 'Etudiant retrieved successfully.');
     }
 
     /**
-     * Update the specified resource in storage.
+     * modification d'un etudiant dans la base de données
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  \Illuminate\Http\Request  $_srequest requete venant du côté front
+     * @param  int  $iid parametre qui permet d'identifier l'etudiant à modifier
+     * @return \Illuminate\Http\Response retourne l'etudiant qui vient d'être modifier
      */
-    public function update(Request $request, Etudiant $etudiant)
+    public function update(Request $_srequest, Etudiant $etudiant)
     {
-        $input = $request->all();
+        $tsinput = $_srequest->all();
 
-        $validator = Validator::make($input, [
+        $ovalidator = Validator::make($tsinput, [
             'name' => 'required',
             'numero' => 'required'
         ]);
 
-        if ($validator->fails()) {
-            return $this->sendError('Validation Error.', $validator->errors());
+        if ($ovalidator->fails())
+        {
+            return $this->sendError('Validation Error.', $ovalidator->errors());
         }
 
-        $etudiant->name = $input['name'];
-        $etudiant->numero = $input['numero'];
-        $etudiant->sexe = $input['sexe'];
+        $etudiant->name = $tsinput['name'];
+        $etudiant->numero = $tsinput['numero'];
+        $etudiant->sexe = $tsinput['sexe'];
         $etudiant->save();
 
         return $this->sendResponse(new EtudiantResource($etudiant), 'Etudiant updated successfully.');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Suppression d'un etudiant dans la base de données
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  int  $iid parametre qui permet d'identifier l'etudiant à supprimer
+     * @return \Illuminate\Http\Response retourne une message confirmant la suppression d'un étdiant
      */
     public function destroy(Etudiant $etudiant)
     {
         $etudiant->delete();
-
         return $this->sendResponse([], 'Etudiant deleted successfully.');
     }
 }
