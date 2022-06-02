@@ -13,116 +13,134 @@ use Validator;
 use App\Http\Resources\Matiere as MatiereResource;
 use App\Models\Etudiant;
 
+/**
+ * Cette classe permet de faire les differentes type de requête entre la base de données et le frontend
+ * @package Gestion scolaire
+ * @subpackage MatiereController
+ */
 class MatiereController extends BaseController
 {
     /**
-     * Display a listing of the resource.
+     *  Permet de récupérer les listes des matières qui sont limiter par le nombre de pagination.
      * @param  \Illuminate\Http\Request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response retourne une liste de la matière
      */
-    public function index(Request $request)
+    public function index(Request $_srequest)
     {
-        $filterType = $request->input('type');
-        $filtervalue = $request->input('value');
+         /*  variables qui stockent le type de filtre à faire */
+        $sfilterType = $_srequest->input('type');
+        $sfiltervalue = $_srequest->input('value');
 
-        $sortbyType = $request->input('sortbyType');
-        $sortbyValue = $request->input('sortbyValue');
+         /*  variables qui stockent le type de trie à faire soit par asc soit par desc */
+        $ssortbyType = $_srequest->input('sortbyType');
+        $ssortbyValue = $_srequest->input('sortbyValue');
 
-        $per_page = intVal($request->input('per_page'));
+        $iper_page = intVal($_srequest->input('per_page'));
 
-        $matiereProf = Matiere::with('professeur');
+        $tomatiereProf = Matiere::with('professeur');
 
-        if ($filterType && $filtervalue) {
-            $matiereProf->where($filterType, 'LIKE', '%' . $filtervalue . '%');
-        } else if ($sortbyType && $sortbyValue) {
-            $matiereProf->orderBy($sortbyType, $sortbyValue);
+        if ($sfilterType && $sfiltervalue)
+        {
+            $tomatiereProf->where($sfilterType, 'LIKE', '%' . $sfiltervalue . '%');
+        }
+        else if ($ssortbyType && $ssortbyValue)
+        {
+            $tomatiereProf->orderBy($ssortbyType, $ssortbyValue);
         }
 
-        $matiere = $matiereProf->paginate($per_page);
+        $tomatiere = $tomatiereProf->paginate($iper_page);
 
-        return $this->sendResponse($matiere, 'matiere retrieved successfully.');
+        return $this->sendResponse($tomatiere, 'matiere retrieved successfully.');
     }
     /**
-     * Store a newly created resource in storage.
+     * Enregistrement d'une matiere dans la base de données
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  \Illuminate\Http\Request  $_srequest requête venant du côté front
+     * @return \Illuminate\Http\Response retourne la matiere qui vient d'être enregistrer
      */
-    public function store(Request $request)
+    public function store(Request $_srequest)
     {
-        $input = $request->all();
+        $tsinput = $_srequest->all();
 
-        $validator = Validator::make($input, [
+        $ovalidator = Validator::make($tsinput, [
             'libelle' => 'required',
             'numero' => 'required'
         ]);
 
-        if ($validator->fails()) {
-            return $this->sendError('Validation Error.', $validator->errors());
+        if ($ovalidator->fails())
+        {
+            return $this->sendError('Validation Error.', $ovalidator->errors());
         }
 
-        $matiere = Matiere::create($input);
+        $omatiere = Matiere::create($tsinput);
 
-        return $this->sendResponse(new MatiereResource($matiere), 'Matiere created successfully.');
+        return $this->sendResponse(new MatiereResource($omatiere), 'Matiere created successfully.');
     }
 
     /**
-     * Display the specified resource.
+     * Permet de prendre une matière spécifique.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  int  $iid paramètre qui permet d'identifier une matière à récupérer
+     * @return \Illuminate\Http\Response retourne un étudiant avec ses matières
      */
-    public function show($id)
+    public function show($_iid)
     {
-        $matiere = Matiere::find($id);
-        $matiereEtudiant = Matiere::find($id)->etudiants;
+        $omatiere = Matiere::find($_iid);
+        $tomatiereEtudiant = Matiere::find($_iid)->etudiants;
 
-        if (is_null($matiere)) {
+        if (is_null($omatiere))
+        {
             return $this->sendError('Matiere not found.');
         }
 
-        return $this->sendResponse([$matiere, $matiereEtudiant], 'Matiere retrieved successfully.');
+        return $this->sendResponse([$omatiere, $tomatiereEtudiant], 'Matiere retrieved successfully.');
     }
 
     /**
-     * Update the specified resource in storage.
+     * Modification d'une matière dans la base de données
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  \Illuminate\Http\Request $_srequest requête venant du côté front
+     * @param  int  $iid paramètre qui permet d'identifier l'a matière à modifier
+     * @return \Illuminate\Http\Response retourne l'etudiant qui vient d'être modifier
      */
-    public function update(Request $request, Matiere $matiere)
+    public function update(Request $_srequest, Matiere $matiere)
     {
-        $input = $request->all();
+        $tsinput = $_srequest->all();
 
-        $validator = Validator::make($input, [
+        $ovalidator = Validator::make($tsinput, [
             'libelle' => 'required',
             'numero' => 'required'
         ]);
 
-        if ($validator->fails()) {
-            return $this->sendError('Validation Error.', $validator->errors());
+        if ($ovalidator->fails())
+         {
+            return $this->sendError('Validation Error.', $ovalidator->errors());
         }
-        $profId = $request->input('professeur_id');
-        $etudiantId = $request->input('etudiant_id');
-        $isAddrelation = $request->input('remove');
+        $sprofId = $_srequest->input('professeur_id');
+        $setudiantId = $_srequest->input('etudiant_id');
+        $brelation = $_srequest->input('remove');
 
-        // var_dump($isAddrelation);
-        if ($profId) {
-            $matiere->professeur_id = $profId;
-        } else {
+        if ($sprofId)
+        {
+            $matiere->professeur_id = $sprofId;
+        }
+        else
+        {
             $matiere->professeur_id = null;
         }
-        $matiere->libelle = $input['libelle'];
-        $matiere->numero = $input['numero'];
-        $matiere->coefficient = $input['coefficient'];
+        $matiere->libelle = $tsinput['libelle'];
+        $matiere->numero = $tsinput['numero'];
+        $matiere->coefficient = $tsinput['coefficient'];
 
-        if ($etudiantId and $isAddrelation) {
-            $etudiant = Etudiant::find($etudiantId);
-            $matiere->etudiants()->sync($etudiant, false);
-        } else {
-            $etudiant = Etudiant::find($etudiantId);
-            $matiere->etudiants()->detach($etudiant);
+        if ($setudiantId and $brelation)
+        {
+            $oetudiant = Etudiant::find($setudiantId);
+            $matiere->etudiants()->sync($oetudiant, false);
+        }
+        else
+        {
+            $oetudiant = Etudiant::find($setudiantId);
+            $matiere->etudiants()->detach($oetudiant);
         }
         $matiere->save();
 
@@ -130,10 +148,10 @@ class MatiereController extends BaseController
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Suppression d'une matière dans la base de données.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  int   $iid parametre qui permet d'identifier la matière à supprimer
+     * @return \Illuminate\Http\Response  retourne une message confirmant la suppression d'une matière
      */
     public function destroy(Matiere $matiere)
     {

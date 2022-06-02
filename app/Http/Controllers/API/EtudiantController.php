@@ -13,7 +13,7 @@ use Validator;
 use App\Http\Resources\Etudiant as EtudiantResource;
 
 /**
- * Cette classe permet de faire les differentes type de requete entre la base de données et le front
+ * Cette classe permet de faire les differentes type de requête entre la base de données et le frontend
  * @package Gestion scolaire
  * @subpackage EtudiantController
  */
@@ -30,7 +30,7 @@ class EtudiantController extends BaseController
         $sfilterType = $_srequest->input('type');
         $sfiltervalue = $_srequest->input('value');
 
-        /*  variable qui stock le type de  sorte à faire soit par asc soit par desc */
+        /*  variable qui stock le type de trie à faire soit par asc soit par desc */
         $ssortbyType = $_srequest->input('sortbyType');
         $ssortbyValue = $_srequest->input('sortbyValue');
 
@@ -51,7 +51,7 @@ class EtudiantController extends BaseController
     /**
      * Enregistrement d'un etudiant dans la base de données
      *
-     * @param  \Illuminate\Http\Request  $_srequest requete venant du côté front
+     * @param  \Illuminate\Http\Request  $_srequest requête venant du côté front
      * @return \Illuminate\Http\Response retourne l'etudiant qui vient d'être enregistrer
      */
     public function store(Request $_srequest)
@@ -92,7 +92,7 @@ class EtudiantController extends BaseController
     }
 
     /**
-     * modification d'un etudiant dans la base de données
+     * Modification d'un etudiant dans la base de données
      *
      * @param  \Illuminate\Http\Request  $_srequest requete venant du côté front
      * @param  int  $iid parametre qui permet d'identifier l'etudiant à modifier
