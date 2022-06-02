@@ -1,7 +1,7 @@
 <?php
 /**
- * @package Gestion scolaire
- * @subpackage Matiere
+  * @package App\
+ * @subpackage Http\Controllers\API
  * @author Mamy
  */
 namespace App\Http\Controllers\API;
@@ -15,8 +15,8 @@ use App\Models\Etudiant;
 
 /**
  * Cette classe permet de faire les differentes type de requête entre la base de données et le frontend
- * @package Gestion scolaire
- * @subpackage MatiereController
+ * @package App\
+ * @subpackage Http\Controllers\API
  */
 class MatiereController extends BaseController
 {

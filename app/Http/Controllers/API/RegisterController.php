@@ -1,8 +1,8 @@
 <?php
 
 /**
- * @package Gestion scolaire
- * @subpackage Register
+  * @package App\
+ * @subpackage Http\Controllers\API
  * @author Mamy
  */
 namespace App\Http\Controllers\API;
@@ -15,8 +15,8 @@ use Validator;
 
 /**
  * Cette classe permet de faire les differentes type de requête entre la base de données et le frontend
- * @package Gestion scolaire
- * @subpackage RegisterController
+  * @package App\
+ * @subpackage Http\Controllers\API
  */
 class RegisterController extends BaseController
 {

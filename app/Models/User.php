@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * @package App
+ * @subpackage Models
+ * @author Mamy
+ */
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -9,12 +13,18 @@ use Illuminate\Notifications\Notifiable;
 // use Laravel\Sanctum\HasApiTokens;
 use Laravel\Passport\HasApiTokens;
 
+/**
+ * Cette classe sert du modele à la table user dans la base de données
+ * @package App
+ * @subpackage Models
+ */
+
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
     /**
-     * The attributes that are mass assignable.
+     * Les attributs qui sont assignables en masse.
      *
      * @var array<int, string>
      */
@@ -25,7 +35,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * The attributes that should be hidden for serialization.
+     * Les attributs qui doivent être masqués pour la sérialisation.
      *
      * @var array<int, string>
      */
@@ -35,7 +45,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * The attributes that should be cast.
+     * Les attributs qui doivent être transtypés.
      *
      * @var array<string, string>
      */
