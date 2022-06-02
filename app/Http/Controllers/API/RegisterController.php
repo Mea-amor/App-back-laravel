@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @package Gestion scolaire
+ * @subpackage Register
+ * @author Mamy
+ */
 namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
@@ -8,52 +13,61 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Validator;
 
+/**
+ * Cette classe permet de faire les differentes type de requête entre la base de données et le frontend
+ * @package Gestion scolaire
+ * @subpackage RegisterController
+ */
 class RegisterController extends BaseController
 {
     /**
-     * Register api
+     * Enregistrement d'un utilisateur dans la base de données
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response $tssuccess retourne une message d'authentification
      */
-    public function register(Request $request)
+    public function register(Request $_srequest)
     {
-        $validator = Validator::make($request->all(), [
+        $validator = Validator::make($_srequest->all(), [
             'email' => 'required|email',
             'password' => 'required',
             'c_password' => 'required|same:password',
         ]);
 
-        if ($validator->fails()) {
+        if ($validator->fails())
+        {
             return $this->sendError('Validation Error.', $validator->errors());
         }
 
-        $input = $request->all();
+        $input = $_srequest->all();
         $input['name'] = "defaultName";
         $input['password'] = bcrypt($input['password']);
-        $user = User::create($input);
-        // $success['token'] =  $user->createToken('MyApp')->accessToken;
-        $success['name'] =  $user->name;
-        $success['email'] =  $user->email;
 
-        return $this->sendResponse($success, 'User register successfully.');
+        $ouser = User::create($input);
+        $tssuccess['token'] =  $ouser->createToken('MyApp')->accessToken;
+        $tssuccess['name'] =  $ouser->name;
+        $tssuccess['email'] =  $ouser->email;
+
+        return $this->sendResponse($tssuccess, 'User register successfully.');
     }
 
     /**
-     * Login api
+     * Authentification d'un utilisateur
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response $tssuccess retourne une message d'authentification
      */
-    public function login(Request $request)
+    public function login(Request $_srequest)
     {
-        // var_dump("tests")
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-            $user = Auth::user();
-            $success['token'] =  $user->createToken('MyApp')->accessToken;
-            $success['name'] =  $user->name;
-            $success['email'] =  $user->email;
+        if (Auth::attempt(['email' => $_srequest->email, 'password' => $_srequest->password]))
+        {
+            $ouser = Auth::user();
+            $tssuccess['token'] =  $ouser->createToken('MyApp')->accessToken;
+            $tssuccess['name'] =  $ouser->name;
+            $tssuccess['email'] =  $ouser->email;
 
-            return $this->sendResponse($success, 'User login successfully.');
-        } else {
+            return $this->sendResponse($tssuccess, 'User login successfully.');
+        }
+        else
+        {
             return $this->sendError('Unauthorised.', ['error' => 'Unauthorised']);
         }
     }
